@@ -5,6 +5,12 @@
   <main>
     <section>
       <header>
+        <h2>Freet visibility settings</h2>
+      </header>
+      <ChangeFreetVisibilityForm />
+    </section>
+    <section>
+      <header>
         <h2>Account settings for @{{ $store.state.username }}</h2>
       </header>
       <ChangeUsernameForm />
@@ -25,6 +31,7 @@ import ChangeUsernameForm from '@/components/Account/ChangeUsernameForm.vue';
 import ChangePasswordForm from '@/components/Account/ChangePasswordForm.vue';
 import DeleteAccountForm from '@/components/Account/DeleteAccountForm.vue';
 import LogoutForm from '@/components/Account/LogoutForm.vue';
+import ChangeFreetVisibilityForm from '@/components/Account/ChangeFreetVisibilityForm.vue';
 
 export default {
   name: 'AccountPage',
@@ -32,7 +39,8 @@ export default {
     ChangeUsernameForm,
     ChangePasswordForm,
     DeleteAccountForm,
-    LogoutForm
+    LogoutForm,
+    ChangeFreetVisibilityForm
   }
 };
 </script>
