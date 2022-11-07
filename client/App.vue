@@ -22,6 +22,14 @@ export default {
       this.$store.commit('setUsername', user ? user.username : null);
     });
 
+    fetch('/api/sensitivitySettings', {
+      credentials: 'same-origin' // Sends express-session credentials with request
+    }).then(res => res.json()).then(res => {
+      const settings = res.settings;
+      this.$store.commit('setSensitiveContentSetting', settings ? settings.showSensitiveContent : false);
+      this.$store.commit('setHiddenFreetSetting', settings ? settings.showHiddenFreet : false);
+    });
+
     // Clear alerts on page refresh
     this.$store.state.alerts = {};
   }

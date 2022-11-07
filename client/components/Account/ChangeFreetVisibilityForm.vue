@@ -1,15 +1,29 @@
 <template>
   <div>
+    <section>
+      <h3>Show Sensitive Content</h3>
+      <label class="switch">
+        <input v-if="$store.state.showSensitiveContent" type="checkbox" checked @click="hideSensitiveContent">
+        <input v-else type="checkbox" @click="showSensitiveContent">
+        <div class="slider round"></div>
+      </label>
+      <h3>Show Hidden Freet</h3>
+      <label class="switch">
+        <input v-if="$store.state.showHiddenFreet" type="checkbox" checked @click="hideHiddenFreet">
+        <input v-else type="checkbox" @click="showHiddenFreet">
+        <div class="slider round"></div>
+      </label>
+    </section>
     <label for="toggle_button1">
-        <span v-if="$store.state.showSensitiveContent" class="toggle__label">On </span>
-        <span v-if="! $store.state.showSensitiveContent" class="toggle__label">Off </span>
+        <span v-if="$store.state.showSensitiveContent" class="toggle__label">On remember to remove</span>
+        <span v-if="! $store.state.showSensitiveContent" class="toggle__label">Off remember to remove</span>
 
         <input type="checkbox" id="toggle_button1" v-model="checkedValue">
         <span class="toggle__switch"></span>
     </label>
     <label for="toggle_button2">
-        <span v-if="$store.state.showHiddenFreet" class="toggle__label">On</span>
-        <span v-if="! $store.state.showHiddenFreet" class="toggle__label">Off</span>
+        <span v-if="$store.state.showHiddenFreet" class="toggle__label">On remember to remove</span>
+        <span v-if="! $store.state.showHiddenFreet" class="toggle__label">Off remember to remove</span>
 
         <input type="checkbox" id="toggle_button2" v-model="checkedValue">
         <span class="toggle__switch"></span>
@@ -19,58 +33,84 @@
 <script>
 export default {
   name: 'ChangeFreetVisibilityForm',
-  props: {
-    // sensitivitySettings data of user
-    sensitivitySettings: {
-      type: Object,
-      required: true
+  data () {
+    return {
+      showSensitiveContent: $store.state.showSensitiveContent,
+      showHiddenFreet: $store.state.showHiddenFreet,
     }
   },
-  data() {
-    return {
-      showSensitiveContent: false,
-      showHiddenFreet: false,
-      alerts: {} // Displays success/error messages
-    };
-  },
   methods: {
-    showSensitiveContent() {
-      this.showSensitiveContent = true;
-    },
-    hideSensitiveContent() {
-      this.showSensitiveContent = false;
-    },
-    showHiddenFreet() {
-      this.showHiddenFreet = true;
-    },
-    hideHiddenFreet() {
-      this.showHiddenFreet = false;
-    },
-    async request(params) {
-      /**
-       * Submits a request to the freet's endpoint
-       * @param params - Options for the request
-       * @param params.body - Body for the request, if it exists
-       * @param params.callback - Function to run if the the request succeeds
-       */
+    async showSensitiveContent() {
       const options = {
-        method: params.method, headers: {'Content-Type': 'application/json'}
+        method: 'PATCH', headers: {'Content-Type': 'application/json'}
       };
-      if (params.body) {
-        options.body = params.body;
-      }
 
       try {
-        const r = await fetch(`/api/sensitivitySettings/`, options);
+        const r = await fetch('/api/sensitivitySettings/showSensitiveContent', options);
         if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
+        } else {
+          this.$store.commit('setSensitiveContentSetting', true);
         }
 
-        this.editing = false;
-        this.$store.commit('refreshFreets');
+      } catch (e) {
+        this.$set(this.alerts, e, 'error');
+        setTimeout(() => this.$delete(this.alerts, e), 3000);
+      }
+    },
+    async hideSensitiveContent() {
+      const options = {
+        method: 'PATCH', headers: {'Content-Type': 'application/json'}
+      };
 
-        params.callback();
+      try {
+        const r = await fetch('/api/sensitivitySettings/hideSensitiveContent', options);
+        if (!r.ok) {
+          const res = await r.json();
+          throw new Error(res.error);
+        } else {
+          this.$store.commit('setSensitiveContentSetting', false);
+        }
+
+      } catch (e) {
+        this.$set(this.alerts, e, 'error');
+        setTimeout(() => this.$delete(this.alerts, e), 3000);
+      }
+    },
+    async showHiddenFreet() {
+      const options = {
+        method: 'PATCH', headers: {'Content-Type': 'application/json'}
+      };
+
+      try {
+        const r = await fetch('/api/sensitivitySettings/showHiddenFreet', options);
+        if (!r.ok) {
+          const res = await r.json();
+          throw new Error(res.error);
+        } else {
+          this.$store.commit('setHiddenFreetSetting', true);
+        }
+
+      } catch (e) {
+        this.$set(this.alerts, e, 'error');
+        setTimeout(() => this.$delete(this.alerts, e), 3000);
+      }
+    },
+    async hideHiddenFreet() {
+      const options = {
+        method: 'PATCH', headers: {'Content-Type': 'application/json'}
+      };
+
+      try {
+        const r = await fetch('/api/sensitivitySettings/hideHiddenFreet', options);
+        if (!r.ok) {
+          const res = await r.json();
+          throw new Error(res.error);
+        } else {
+          this.$store.commit('setHiddenFreetSetting', false);
+        }
+
       } catch (e) {
         this.$set(this.alerts, e, 'error');
         setTimeout(() => this.$delete(this.alerts, e), 3000);
@@ -79,3 +119,67 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
