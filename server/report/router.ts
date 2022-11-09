@@ -1,4 +1,4 @@
-import type {NextFunction, Request, Response} from 'express';
+import type {Request, Response} from 'express';
 import express from 'express';
 import ReportCollection from './collection';
 import * as userValidator from '../user/middleware';
@@ -22,10 +22,14 @@ router.get(
     freetValidator.isFreetExists
   ],
   async (req: Request, res: Response) => {
-    const allReports = await ReportCollection.findAll(req.params.freetId);
-    const response_ = allReports.map(util.constructReportResponse);
-    const count = await ReportCollection.getCountofAll(req.params.freetId);
-    const response = {reports: response_, count};
+    // const allReports = await ReportCollection.findAll(req.params.freetId);
+    // const response_ = allReports.map(util.constructReportResponse);
+    const c1 = await ReportCollection.getCountofAll(req.params.freetId);
+    const c2 = await ReportCollection.getCountofType(req.params.freetId, 'offensive');
+    const c3 = await ReportCollection.getCountofType(req.params.freetId, 'sensitive');
+    const c4 = await ReportCollection.getCountofType(req.params.freetId, 'misinformation');
+    // const response = {reports: response_, count};
+    const response = {totalCount: c1, offensiveCount: c2, sensitiveCount: c3, misinformationCount: c4};
     res.status(200).json(response);
   }
 );

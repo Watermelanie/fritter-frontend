@@ -14,7 +14,10 @@ const store = new Vuex.Store({
     username: null, // Username of the logged in user
     alerts: {}, // global success/error messages encountered during submissions to non-visible forms
     showSensitiveContent: false,
-    showHiddenFreet: false
+    showHiddenFreet: false,
+    warning: false, // show warning if found offensive content in freet
+    filteredContent: {}, // words that were filtered
+    freetContent: null
   },
   mutations: {
     alert(state, payload) {
@@ -53,13 +56,33 @@ const store = new Vuex.Store({
        */
       const url = state.filter ? `/api/users/${state.filter}/freets` : '/api/freets';
       const res = await fetch(url).then(async r => r.json());
-      state.freets = res;
+      const allFreets = [];
+        for (const freet of res) {
+          const url = `/api/reports/${freet._id}`
+          const r = await fetch(url);
+          const res = await r.json();
+          if (!r.ok) {
+            throw new Error(res.error);
+          }
+          allFreets.push([freet, res]);
+          
+        }
+      state.freets = allFreets;
     },
     setSensitiveContentSetting(state, setting) {
       state.showSensitiveContent = setting;
     },
     setHiddenFreetSetting(state, setting) {
       state.showHiddenFreet = setting;
+    },
+    showWarning(state, setting) {
+      state.warning = setting;
+    },
+    setFilteredContent(state, content) {
+      state.filteredContent = content;
+    },
+    setFreetContent(state, content) {
+      state.freetContent = content
     }
   },
   // Store data across page refreshes, only discard on browser close

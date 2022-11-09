@@ -6,6 +6,12 @@
       <header>
         <h2>Welcome @{{ $store.state.username }}</h2>
       </header>
+      <Teleport to="body">
+        <!-- use the modal component, pass in the prop -->
+        <modal 
+          :show="$store.state.warning" 
+        />
+      </Teleport>
       <CreateFreetForm />
     </section>
     <section v-else>
@@ -46,7 +52,8 @@
         <FreetComponent
           v-for="freet in $store.state.freets"
           :key="freet.id"
-          :freet="freet"
+          :freet="freet[0]"
+          :counts="freet[1]"
         />
       </section>
       <article
@@ -62,10 +69,11 @@
 import FreetComponent from '@/components/Freet/FreetComponent.vue';
 import CreateFreetForm from '@/components/Freet/CreateFreetForm.vue';
 import GetFreetsForm from '@/components/Freet/GetFreetsForm.vue';
+import Modal from '@/components/Freet/WarningPopUp.vue';
 
 export default {
   name: 'FreetPage',
-  components: {FreetComponent, GetFreetsForm, CreateFreetForm},
+  components: {FreetComponent, GetFreetsForm, CreateFreetForm, Modal},
   mounted() {
     this.$refs.getFreetsForm.submit();
   }

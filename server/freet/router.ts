@@ -69,6 +69,7 @@ router.post(
   ],
   async (req: Request, res: Response) => {
     const wordsDetected = ContentFilterCollection.runFilter(req.body.content);
+    const wordsDetectedArray = Array.from(wordsDetected);
     if (wordsDetected.size === 0) {
       const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
       const freet = await FreetCollection.addOne(userId, req.body.content);
@@ -81,7 +82,7 @@ router.post(
     } else {
       res.status(300).json({
         message: 'Some inappropriate content was detected.',
-        content: wordsDetected
+        content: wordsDetectedArray
       });
     }
   }
@@ -165,19 +166,25 @@ router.patch(
     freetValidator.isValidFreetContent
   ],
   async (req: Request, res: Response) => {
-    const wordsDetected = ContentFilterCollection.runFilter(req.body.content);
-    if (wordsDetected.size === 0) {
-      const freet = await FreetCollection.updateOne(req.params.freetId, req.body.content);
-      res.status(200).json({
-        message: 'Your freet was updated successfully.',
-        freet: util.constructFreetResponse(freet)
-      });
-    } else {
-      res.status(300).json({
-        message: 'Some inappropriate content was detected.',
-        content: wordsDetected
-      });
-    }
+    const freet = await FreetCollection.updateOne(req.params.freetId, req.body.content);
+    res.status(200).json({
+      message: 'Your freet was updated successfully.',
+      freet: util.constructFreetResponse(freet)
+    });
+    // const wordsDetected = ContentFilterCollection.runFilter(req.body.content);
+    // const wordsDetectedArray = Array.from(wordsDetected);
+    // if (wordsDetected.size === 0) {
+    //   const freet = await FreetCollection.updateOne(req.params.freetId, req.body.content);
+    //   res.status(200).json({
+    //     message: 'Your freet was updated successfully.',
+    //     freet: util.constructFreetResponse(freet)
+    //   });
+    // } else {
+    //   res.status(300).json({
+    //     message: 'Some inappropriate content was detected.',
+    //     content: wordsDetectedArray
+    //   });
+    // }
   }
 );
 

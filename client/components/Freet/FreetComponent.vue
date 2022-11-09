@@ -6,6 +6,7 @@
     class="freet"
   >
     <header>
+      <p v-if="$store.state.username !== freet.author && counts.misinformationCount >= 20">This freet may contain inaccurate information.</p>
       <h3 class="author">
         @{{ freet.author }}
       </h3>
@@ -39,9 +40,9 @@
         <button
           v-if="!reporting"
           @click="startReporting"
-          >
-            Report Freet
-          </button>
+        >
+          Report Freet
+        </button>
         <button
           v-if="reporting"
           @click="submitReport"
@@ -57,9 +58,12 @@
       </div>
     </header>
     <div v-if="reporting">
-    Type:
-      <select name="reportType" id="reportType" @input="reportType = $event.target.value">
-        <option/>
+      Type:
+      <select
+        id="reportType"
+        name="reportType"
+        @input="reportType = $event.target.value">
+        <option />
         <option value="offensive">Offensive</option>
         <option value="sensitive">Sensitive</option>
         <option value="misinformation">Misinformation</option>
@@ -76,11 +80,19 @@
       :value="draft"
       @input="draft = $event.target.value"
     />
+    <p v-else-if="!showFreet_ && $store.state.username !== freet.author && (counts.offensiveCount >= 20 || counts.totalCount >= 10) && !$store.state.showHiddenFreet">
+      This is hidden freet.
+      <button @click="showFreet">Show hidden freet</button>
+    </p>
+    <p v-else-if="!showFreet_ && $store.state.username !== freet.author && counts.sensitiveCount >= 10 && !$store.state.showSensitiveContent">
+      This freet may contain sensitive content.
+      <button @click="showFreet">Show sensitive content</button>
+    </p>
     <p
       v-else
       class="content"
     >
-      {{ freet.content }}
+      {{ freet.content }} {{counts}}
     </p>
     <p class="info">
       Posted at {{ freet.dateModified }}
@@ -106,6 +118,9 @@ export default {
     freet: {
       type: Object,
       required: true
+    },
+    counts: {
+      type: Object
     }
   },
   data() {
@@ -115,10 +130,14 @@ export default {
       alerts: {}, // Displays success/error messages encountered during freet modification
       reporting: false, // Whether or not this freet is in reporting mode
       reportContent: "", // content of report
-      reportType: "" // type of report
+      reportType: "", // type of report
+      showFreet_: false
     };
   },
   methods: {
+    showFreet() {
+      this.showFreet_ = true;
+    },
     startEditing() {
       /**
        * Enables edit mode on this freet.

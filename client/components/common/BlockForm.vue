@@ -62,7 +62,13 @@ export default {
       setUsername: false, // Whether or not stored username should be updated after form submission
       refreshFreets: false, // Whether or not stored freets should be updated after form submission
       alerts: {}, // Displays success/error messages encountered during form submission
-      callback: null // Function to run after successful form submission
+      callback: null, // Function to run after successful form submission
+      warning: false,
+      warningCallback: () => {
+        const message = 'Freet contains offensive content';
+        this.$set(this.alerts, message, 'warning');
+        setTimeout(() => this.$delete(this.alerts, message), 3000);
+      }
     };
   },
   methods: {
@@ -87,25 +93,39 @@ export default {
 
       try {
         const r = await fetch(this.url, options);
+        console.log(r);
         if (!r.ok) {
           // If response is not okay, we throw an error and enter the catch block
           const res = await r.json();
-          throw new Error(res.error);
+          if (res.message === "Some inappropriate content was detected.") {
+            this.warning = true;
+            this.$store.commit('setFreetContent', options.body);
+            this.$store.commit('showWarning', true);
+            this.$store.commit('setFilteredContent', res.content);
+          } else {
+            throw new Error(res.error);
+          }
         }
 
-        if (this.setUsername) {
-          const text = await r.text();
-          const res = text ? JSON.parse(text) : {user: null};
-          this.$store.commit('setUsername', res.user ? res.user.username : null);
-        }
+        if (this.warning) {
+          this.warning = false;
+          this.warningCallback();
+        } else {
+          if (this.setUsername) {
+            const text = await r.text();
+            const res = text ? JSON.parse(text) : {user: null};
+            this.$store.commit('setUsername', res.user ? res.user.username : null);
+          }
 
-        if (this.refreshFreets) {
-          this.$store.commit('refreshFreets');
-        }
+          if (this.refreshFreets) {
+            this.$store.commit('refreshFreets');
+          }
 
-        if (this.callback) {
-          this.callback();
+          if (this.callback) {
+            this.callback();
+          }
         }
+        
       } catch (e) {
         this.$set(this.alerts, e, 'error');
         setTimeout(() => this.$delete(this.alerts, e), 3000);

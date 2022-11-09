@@ -18,9 +18,19 @@ export default {
         if (!r.ok) {
           throw new Error(res.error);
         }
-
+        const allFreets = [];
+        for (const freet of res) {
+          const url = `/api/reports/${freet._id}`
+          const r = await fetch(url);
+          const res = await r.json();
+          if (!r.ok) {
+            throw new Error(res.error);
+          }
+          allFreets.push([freet, res]);
+          
+        }
         this.$store.commit('updateFilter', this.value);
-        this.$store.commit('updateFreets', res);
+        this.$store.commit('updateFreets', allFreets);
       } catch (e) {
         if (this.value === this.$store.state.filter) {
           // This section triggers if you filter to a user but they

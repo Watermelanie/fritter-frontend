@@ -33,12 +33,6 @@
 <script>
 export default {
   name: 'ChangeFreetVisibilityForm',
-  data () {
-    return {
-      showSensitiveContent: $store.state.showSensitiveContent,
-      showHiddenFreet: $store.state.showHiddenFreet,
-    }
-  },
   methods: {
     async showSensitiveContent() {
       const options = {
