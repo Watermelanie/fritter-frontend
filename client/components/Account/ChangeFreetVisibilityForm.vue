@@ -14,20 +14,6 @@
         <div class="slider round"></div>
       </label>
     </section>
-    <label for="toggle_button1">
-        <span v-if="$store.state.showSensitiveContent" class="toggle__label">On remember to remove</span>
-        <span v-if="! $store.state.showSensitiveContent" class="toggle__label">Off remember to remove</span>
-
-        <input type="checkbox" id="toggle_button1" v-model="checkedValue">
-        <span class="toggle__switch"></span>
-    </label>
-    <label for="toggle_button2">
-        <span v-if="$store.state.showHiddenFreet" class="toggle__label">On remember to remove</span>
-        <span v-if="! $store.state.showHiddenFreet" class="toggle__label">Off remember to remove</span>
-
-        <input type="checkbox" id="toggle_button2" v-model="checkedValue">
-        <span class="toggle__switch"></span>
-    </label>
   </div>
 </template>
 <script>
@@ -155,11 +141,11 @@ export default {
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: rgb(222, 192, 243);
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px rgb(222, 192, 243);
 }
 
 input:checked + .slider:before {

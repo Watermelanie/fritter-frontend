@@ -80,7 +80,7 @@
       :value="draft"
       @input="draft = $event.target.value"
     />
-    <p v-else-if="!showFreet_ && $store.state.username !== freet.author && (counts.offensiveCount >= 20 || counts.totalCount >= 10) && !$store.state.showHiddenFreet">
+    <p v-else-if="!showFreet_ && $store.state.username !== freet.author && (counts.offensiveCount >= 20 || counts.totalCount >= 20) && !$store.state.showHiddenFreet">
       This is hidden freet.
       <button @click="showFreet">Show hidden freet</button>
     </p>
@@ -92,7 +92,7 @@
       v-else
       class="content"
     >
-      {{ freet.content }} {{counts}}
+      {{ freet.content }}
     </p>
     <p class="info">
       Posted at {{ freet.dateModified }}
@@ -274,7 +274,7 @@ export default {
 
 <style scoped>
 .freet {
-    border: 1px solid #111;
+    border: 1.5px solid rgb(222, 192, 243);
     padding: 20px;
     position: relative;
 }

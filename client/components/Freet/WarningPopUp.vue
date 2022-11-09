@@ -70,12 +70,12 @@ export default {
     <div v-if="show" class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-          <!-- <div class="modal-header">
-            <slot name="header">Freet </slot>
-          </div> -->
+          <div class="modal-header">
+            <h3>Freet Content Warning</h3>
+          </div>
 
           <div class="modal-body">
-            <slot name="body">{{$store.state.filteredContent}}</slot>
+            <p name="body">Are you sure you want to make this freet? Your freet contains words that may hurt others. Let's keep Fritter a safe space for everyone.</p>
             words that may have triggered warning: 
             <span v-for="word in $store.state.filteredContent">
                 {{word}}
@@ -85,13 +85,13 @@ export default {
           <div class="modal-footer">
             <slot name="footer">
               <button
-                class="modal-default-button"
-                @click="turnOffWarning"
-              >No</button>
-              <button
-                class="modal-default-button"
+                class="modal-yes-button"
                 @click="createFreet"
               >Yes, continue</button>
+              <button
+                class="modal-no-button"
+                @click="turnOffWarning"
+              >No</button>
             </slot>
           </div>
         </div>
@@ -121,24 +121,36 @@ export default {
 .modal-container {
   width: 300px;
   margin: 0px auto;
-  padding: 20px 30px;
+  padding: 30px 30px;
   background-color: #fff;
-  border-radius: 2px;
+  border-radius: 10px;
+  border-color: rgb(222, 192, 243);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
+  font-family: inherit;
 }
 
 .modal-header h3 {
   margin-top: 0;
-  color: #42b983;
+  color: rgb(222, 192, 243);
 }
 
 .modal-body {
   margin: 20px 0;
 }
 
-.modal-default-button {
+.modal-no-button {
   float: right;
+  background-color: rgba(222, 192, 243, .8);
+  border: 2px rgb(222, 192, 243);
+  border-radius: 20px;
+  width: 70px;
+}
+.modal-yes-button {
+  float: right;
+  text-decoration: underline;
+  background-color: transparent;
+  border: 0;
 }
 
 /*

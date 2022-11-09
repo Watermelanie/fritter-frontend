@@ -48,6 +48,7 @@ body {
   padding: 0;
   margin: 0;
   font-size: 1.2em;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 main {
@@ -61,12 +62,12 @@ main {
     top: 100%;
     left: 50%;
     transform: translate(-50%, 10%);
-    width: 100%;
+    width: 50%;
     text-align: center;
 }
 
 .alerts article {
-    border-radius: 5px;
+    border-radius: 20px;
     padding: 10px 20px;
     color: #fff;
 }
@@ -76,10 +77,10 @@ main {
 }
 
 .alerts .error {
-    background-color: rgb(166, 23, 33);
+    background-color: rgba(166, 23, 33,0.7);
 }
 
 .alerts .success {
-    background-color: rgb(45, 135, 87);
+    background-color: rgba(45, 135, 87, 0.7);
 }
 </style>

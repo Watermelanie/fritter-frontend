@@ -5,10 +5,12 @@
 <template>
   <nav>
     <div class="left">
-      <img src="../../public/logo.svg">
-      <h1 class="title">
-        Fritter
-      </h1>
+      <router-link class="home-icon" to="/">
+        <img src="../../public/logo.svg">
+        <h1 class="title">
+          Fritter
+        </h1>
+      </router-link>
     </div>
     <div class="right">
       <router-link to="/">
@@ -18,7 +20,7 @@
         v-if="$store.state.username"
         to="/account"
       >
-        Account
+        Account Settings
       </router-link>
       <router-link
         v-else
@@ -42,7 +44,7 @@
 <style scoped>
 nav {
     padding: 1vw 2vw;
-    background-color: #ccc;
+    background-color: rgb(222, 192, 243);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -77,5 +79,12 @@ img {
 
 .alerts {
     width: 25%;
+}
+
+.home-icon {
+  display: flex;
+  color: black;
+  margin: 5px;
+  text-decoration: none
 }
 </style>

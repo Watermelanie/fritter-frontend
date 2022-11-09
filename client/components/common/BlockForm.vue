@@ -146,6 +146,12 @@ form {
   position: relative;
 }
 
+button {
+  background-color: rgba(222, 192, 243, .5);
+  border: 2px rgb(222, 192, 243);
+  border-radius: 20px;
+}
+
 article > div {
   display: flex;
   flex-direction: column;
